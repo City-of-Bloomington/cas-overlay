@@ -12,3 +12,6 @@ build/
 bin/
 *.iml
 *.log
+ansible/roles/City-of-Bloomington.*
+ansible/*.retry
+

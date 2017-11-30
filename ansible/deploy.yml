@@ -1,0 +1,38 @@
+---
+- hosts: cas
+  become: yes
+  roles:
+    - City-of-Bloomington.tomcat
+  tasks:
+    - name: "Update apache configuration"
+      template:
+        src: cas.conf
+        dest: /etc/apache2/sites-enabled/conf.d/cas.conf
+        owner: root
+        group: root
+        mode: 0644
+      notify: apache_restart
+
+    - name: "Create configuration directory"
+      file:
+        path: "/etc/cas/config"
+        state: "directory"
+
+#    - name: "Configure Log4J"
+#      copy:
+#        src: "../etc/cas/config/log4j2.xml"
+#        dest: "/etc/cas/config"
+#      notify: "tomcat_restart"
+
+    - name: "Configure CAS"
+      template:
+        src: "cas.properties"
+        dest: "/etc/cas/config"
+      notify: "tomcat_restart"
+
+    - name: "Install Webapp"
+      copy:
+        src: "../target/cas.war"
+        dest: "{{ cas_install_path }}.war"
+      notify: "tomcat_restart"
+...

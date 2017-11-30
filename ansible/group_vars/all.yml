@@ -1,0 +1,7 @@
+---
+cas_webapp_name: "cas"
+cas_install_path: "/srv/webapps/{{ cas_webapp_name }}"
+
+cas_base_uri: "/{{ cas_webapp_name }}"
+cas_base_url: "https://{{ ansible_host }}{{ cas_base_uri }}"
+...
