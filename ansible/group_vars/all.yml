@@ -11,4 +11,5 @@ cas_ldap:
   filter: "sAMAccountName=%u"
   bindDn: "admin@ldap.example.com"
   bindPassword: "{{ vault_cas_ldap.password }}"
+  dnFormat: "%u@example.com"
 ...
