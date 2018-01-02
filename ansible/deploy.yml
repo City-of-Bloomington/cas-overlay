@@ -18,15 +18,15 @@
         path: "/etc/cas/config"
         state: "directory"
 
-#    - name: "Configure Log4J"
-#      copy:
-#        src: "../etc/cas/config/log4j2.xml"
-#        dest: "/etc/cas/config"
-#      notify: "tomcat_restart"
-
     - name: "Configure CAS"
       template:
         src: "cas.properties"
+        dest: "/etc/cas/config"
+      notify: "tomcat_restart"
+
+    - name: "Configure Admin Users"
+      template:
+        src: "adminusers.properties"
         dest: "/etc/cas/config"
       notify: "tomcat_restart"
 

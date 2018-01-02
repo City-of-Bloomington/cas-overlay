@@ -12,4 +12,8 @@ cas_ldap:
   bindDn: "admin@ldap.example.com"
   bindPassword: "{{ vault_cas_ldap.password }}"
   dnFormat: "%u@example.com"
+
+cas_adminPagesSecurity:
+  ip: "127\\.0\\.0\\.1"
+  users: []
 ...
