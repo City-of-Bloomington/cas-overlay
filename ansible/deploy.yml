@@ -18,6 +18,12 @@
         path: "/etc/cas/config"
         state: "directory"
 
+    - name: "Create services directory"
+      file:
+        path: "/etc/cas/services"
+        state: "directory"
+        owner: "tomcat8"
+
     - name: "Configure CAS"
       template:
         src: "cas.properties"
@@ -28,6 +34,14 @@
       template:
         src: "adminusers.properties"
         dest: "/etc/cas/config"
+      notify: "tomcat_restart"
+
+    - name: "Configure services"
+      template:
+        src: "service.json"
+        dest: "/etc/cas/services/{{ item.name | regex_replace('[\\s]', '') }}-{{ item.id }}.json"
+        owner: "tomcat8"
+      with_items: "{{ cas_services }}"
       notify: "tomcat_restart"
 
     - name: "Install Webapp"

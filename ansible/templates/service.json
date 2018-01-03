@@ -1,0 +1,6 @@
+{
+    "@class" : "org.apereo.cas.services.RegexRegisteredService",
+    "serviceId" : "{{ item.serviceId }}",
+    "name" : "{{ item.name }}",
+    "id" : {{ item.id }}
+}

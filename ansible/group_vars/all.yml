@@ -16,4 +16,7 @@ cas_ldap:
 cas_adminPagesSecurity:
   ip: "127\\.0\\.0\\.1"
   users: []
+
+cas_services:
+  - { id: 1, name: "HTTPS and IMAPS", serviceId: "^(https|imaps)://.*", description: "This service definition authorizes all application urls that support HTTPS and IMAPS protocols." }
 ...
