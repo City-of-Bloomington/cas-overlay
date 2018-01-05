@@ -24,6 +24,12 @@
         state: "directory"
         owner: "tomcat8"
 
+    - name: "Create ssl directory"
+      file:
+        path: "/etc/cas/ssl"
+        state: "directory"
+        owner: "tomcat8"
+
     - name: "Configure CAS"
       template:
         src: "cas.properties"
@@ -34,6 +40,41 @@
       template:
         src: "adminusers.properties"
         dest: "/etc/cas/config"
+      notify: "tomcat_restart"
+
+    - name: "Install Google Private Key"
+      copy:
+        content: "{{ cas_google_ssl.private }}"
+        dest: "/etc/cas/ssl/private.pem"
+        mode: "0640"
+        owner: "tomcat8"
+      when: cas_google_ssl.private is defined
+      register: "private_pem"
+      #no_log: True
+      notify: "tomcat_restart"
+
+    #- name: "Convert Google Private Key"
+    #  command: "openssl pkcs8 -topk8 -inform PEM -outform DER -nocrypt -in private.pem -out private.p8"
+    #  args:
+    #    chdir: "/etc/cas/ssl"
+    #  when: private_pem.changed
+
+    - name: "Install Google Public Key"
+      command: "openssl rsa -pubout -in private.pem -out public.der -inform PEM -outform DER"
+      args:
+        chdir: "/etc/cas/ssl"
+      when: private_pem.changed
+      #no_log: True
+      notify: "tomcat_restart"
+
+    - name: "Install Google Cert"
+      copy:
+        content: "{{ cas_google_ssl.cert }}"
+        dest: "/etc/cas/ssl/x509.pem"
+        mode: "0640"
+        owner: "tomcat8"
+      when: cas_google_ssl.cert is defined
+      #no_log: True
       notify: "tomcat_restart"
 
     - name: "Configure services"
