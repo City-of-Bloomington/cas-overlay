@@ -89,11 +89,6 @@
             <artifactId>cas-server-support-saml-googleapps</artifactId>
             <version>${cas.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-oauth-webflow</artifactId>
-            <version>${cas.version}</version>
-        </dependency>
     </dependencies>
 
     <properties>
