@@ -77,12 +77,19 @@
       #no_log: True
       notify: "tomcat_restart"
 
+    - name: "Check for existing services"
+      find:
+        paths: "/etc/cas/services"
+        patterns: "*.json"
+      register: "existing_services"
+
     - name: "Configure services"
       template:
         src: "service.json"
         dest: "/etc/cas/services/{{ item.name | regex_replace('[\\s]', '') }}-{{ item.id }}.json"
         owner: "tomcat8"
       with_items: "{{ cas_services }}"
+      when: existing_services.matched == "0"
       notify: "tomcat_restart"
 
     - name: "Install Webapp"
