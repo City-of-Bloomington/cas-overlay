@@ -15,31 +15,31 @@
             <PatternLayout pattern="%d %p [%c] - &lt;%m&gt;%n"/>
         </Console>
         <RollingFile name="file" fileName="${sys:cas.log.dir}/cas.log" append="true"
-                     filePattern="${sys:cas.log.dir}/cas-%d{yyyy-MM-dd-HH}-%i.log">
+                     filePattern="${sys:cas.log.dir}/cas-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="%d %p [%c] - &lt;%m&gt;%n"/>
             <Policies>
                 <OnStartupTriggeringPolicy />
-                <SizeBasedTriggeringPolicy size="10 MB"/>
-                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
             </Policies>
         </RollingFile>
         <RollingFile name="auditlogfile" fileName="${sys:cas.log.dir}/cas_audit.log" append="true"
-                     filePattern="${sys:cas.log.dir}/cas_audit-%d{yyyy-MM-dd-HH}-%i.log">
+                     filePattern="${sys:cas.log.dir}/cas_audit-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="%d %p [%c] - %m%n"/>
             <Policies>
                 <OnStartupTriggeringPolicy />
-                <SizeBasedTriggeringPolicy size="10 MB"/>
-                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
             </Policies>
         </RollingFile>
 
         <RollingFile name="perfFileAppender" fileName="${sys:cas.log.dir}/perfStats.log" append="true"
-                     filePattern="${sys:cas.log.dir}/perfStats-%d{yyyy-MM-dd-HH}-%i.log">
+                     filePattern="${sys:cas.log.dir}/perfStats-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="%m%n"/>
             <Policies>
                 <OnStartupTriggeringPolicy />
-                <SizeBasedTriggeringPolicy size="10 MB"/>
-                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
             </Policies>
         </RollingFile>
 
