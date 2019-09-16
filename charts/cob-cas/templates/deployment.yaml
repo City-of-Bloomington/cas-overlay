@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cob-cas.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "cob-cas.name" . }}
+    helm.sh/chart: {{ include "cob-cas.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "cob-cas.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "cob-cas.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: {{ include "cob-cas.name" . }}-config
+          configMap:
+            name: {{ include "cob-cas.name" . }}-config
+
+        - name: {{ include "cob-cas.name" . }}-ssl
+          secret:
+            secretName: {{ include "cob-cas.name" . }}-ssl
+
+        - name: {{ include "cob-cas.name" . }}-services
+          configMap:
+            name: {{ include "cob-cas.name" . }}-services
+
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          # livenessProbe:
+          #   initialDelaySeconds: 60
+          #   httpGet:
+          #     path: /cas/login
+          #     port: 8080
+          # readinessProbe:
+          #   initialDelaySeconds: 60
+          #   httpGet:
+          #     path: /cas/login
+          #     port: 8080
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          volumeMounts:
+            - name: {{ include "cob-cas.name" . }}-config
+              mountPath: "/etc/cas/config"
+
+            - name: {{ include "cob-cas.name" . }}-services
+              mountPath: "/etc/cas/services"
+
+            - name: {{ include "cob-cas.name" . }}-ssl
+              mountPath: "/etc/cas/ssl"
+
+            #- name: {{ include "cob-cas.name" . }}-ssl
+            #  mountPath: "/etc/cas/ssl"
+
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

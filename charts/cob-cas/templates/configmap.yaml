@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cob-cas.name" . }}-config
+  labels:
+    app.kubernetes.io/name: {{ include "cob-cas.name" . }}
+    helm.sh/chart: {{ include "cob-cas.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data: 
+  cas.properties: |-
+    cas.server.name={{ .Values.config.casProperties.serverName }}
+    cas.server.prefix={{ .Values.config.casProperties.serverPrefix }}
+    cas.serviceRegistry.json.location=file:/etc/cas/services
+    cas.serviceRegistry.initFromJson=true
+    cas.serviceRegistry.watcherEnabled=true
+    cas.authn.accept.users=
+    cas.authn.ldap[0].type={{ .Values.config.casProperties.ldap.type }}
+    cas.authn.ldap[0].ldapUrl={{ .Values.config.casProperties.ldap.url }}
+    cas.authn.ldap[0].connectionStrategy={{ .Values.config.casProperties.ldap.ConnectStrategy }}
+    cas.authn.ldap[0].useSsl={{ .Values.config.casProperties.ldap.SSL }}
+    cas.authn.ldap[0].useStartTls={{ .Values.config.casProperties.ldap.StartTLS }}
+    cas.authn.ldap[0].baseDn={{ .Values.config.casProperties.ldap.baseDN }}
+    cas.authn.ldap[0].searchFilter={{ .Values.config.casProperties.ldap.searchFilter }}
+    cas.authn.ldap[0].bindDn={{ .Values.config.casProperties.ldap.bindDN }}
+    cas.authn.ldap[0].bindCredential={{ .Values.config.casProperties.ldap.bindcredential }}
+    cas.authn.ldap[0].dnFormat={{ .Values.config.casProperties.ldap.dnFormat }}
+    cas.authn.ldap[0].principalAttributeId={{ .Values.config.casProperties.ldap.PrincipalAttributeId }} 
+    cas.authn.ldap[0].principalAttributeList={{ .Values.config.casProperties.ldap.PrincipalAttributeList }}
+    cas.authn.oidc.issuer={{ .Values.config.casProperties.oidc.issuer }}
+    cas.authn.oidc.claims={{ .Values.config.casProperties.oidc.claims }}
+    cas.authn.oidc.dynamicClientRegistrationMode=PROTECTED
+
+
+    cas.googleApps.publicKeyLocation=file:/etc/cas/ssl/public.der
+    cas.googleApps.keyAlgorithm=RSA
+    cas.googleApps.privateKeyLocation=file:/etc/cas/ssl/private.pem
+    cas.webflow.crypto.signing.key={{ .Values.config.casProperties.crypto.webflowSigningKey }}
+    cas.webflow.crypto.encryption.key={{ .Values.config.casProperties.crypto.webflowEncryptionKey }}
+    cas.tgc.crypto.signing.key={{ .Values.config.casProperties.crypto.tgcSigningKey }}
+    cas.tgc.crypto.encryption.key={{ .Values.config.casProperties.crypto.tgcEncryptionKey }}
+
+    logging.level.org.apereo.cas=DEBUG
+    server.tomcat.accesslog.enabled=true
+    server.tomcat.accesslog.pattern=%t %a "%r" %s (%D ms)
+    server.tomcat.accesslog.suffix=.log
+
+    server.servlet.context-path=/cas
+    cas.server.tomcat.serverName=Apereo CAS
+    server.port=8080
+    server.useForwardHeaders=true
+
+    server.ssl.enabled=false
+
+    cas.server.tomcat.http.enabled=false
+    cas.server.tomcat.http.port=8080
+    cas.server.tomcat.http.protocol=org.apache.coyote.http11.Http11NioProtocol
+    cas.server.tomcat.http.attributes.attributeName=attributeValue
+
+    cas.server.tomcat.httpProxy.enabled=false
+    cas.server.tomcat.httpProxy.secure=true
+    cas.server.tomcat.httpProxy.protocol=org.apache.coyote.http11.Http11NioProtocol
+    cas.server.tomcat.httpProxy.scheme=https
+    #cas.server.tomcat.httpProxy.redirectPort=
+    #cas.server.tomcat.httpProxy.proxyPort=
+    cas.server.tomcat.httpProxy.attributes.attributeName=attributeValue
+
+    server.ssl.keyStore={{ .Values.config.casProperties.ssl.keyStoreLocation }}
+    server.ssl.keyStorePassword={{ .Values.config.casProperties.ssl.keyStorePassword }}
+    server.ssl.keyPassword={{ .Values.config.casProperties.ssl.keyPassword }}
