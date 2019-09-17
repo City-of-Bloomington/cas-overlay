@@ -15,6 +15,8 @@ data:
     cas.serviceRegistry.initFromJson=true
     cas.serviceRegistry.watcherEnabled=true
     cas.authn.accept.users=
+    cas.authn.accept.name=
+    cas.authn.accept.credentialCriteria=
     cas.authn.ldap[0].type={{ .Values.config.casProperties.ldap.type }}
     cas.authn.ldap[0].ldapUrl={{ .Values.config.casProperties.ldap.url }}
     cas.authn.ldap[0].connectionStrategy={{ .Values.config.casProperties.ldap.ConnectStrategy }}
@@ -23,15 +25,13 @@ data:
     cas.authn.ldap[0].baseDn={{ .Values.config.casProperties.ldap.baseDN }}
     cas.authn.ldap[0].searchFilter={{ .Values.config.casProperties.ldap.searchFilter }}
     cas.authn.ldap[0].bindDn={{ .Values.config.casProperties.ldap.bindDN }}
-    cas.authn.ldap[0].bindCredential={{ .Values.config.casProperties.ldap.bindcredential }}
+    cas.authn.ldap[0].bindCredential={{ .Values.config.casProperties.ldap.bindCredential }}
     cas.authn.ldap[0].dnFormat={{ .Values.config.casProperties.ldap.dnFormat }}
     cas.authn.ldap[0].principalAttributeId={{ .Values.config.casProperties.ldap.PrincipalAttributeId }} 
     cas.authn.ldap[0].principalAttributeList={{ .Values.config.casProperties.ldap.PrincipalAttributeList }}
     cas.authn.oidc.issuer={{ .Values.config.casProperties.oidc.issuer }}
     cas.authn.oidc.claims={{ .Values.config.casProperties.oidc.claims }}
     cas.authn.oidc.dynamicClientRegistrationMode=PROTECTED
-
-
     cas.googleApps.publicKeyLocation=file:/etc/cas/ssl/public.der
     cas.googleApps.keyAlgorithm=RSA
     cas.googleApps.privateKeyLocation=file:/etc/cas/ssl/private.pem

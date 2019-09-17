@@ -19,5 +19,5 @@ bin/
 tmp/
 ./apache-tomcat
 apache-tomcat.zip
-values.y*ml
+cob.values.y*ml
 make.conf
