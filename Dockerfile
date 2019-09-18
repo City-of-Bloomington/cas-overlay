@@ -1,21 +1,26 @@
-FROM adoptopenjdk/openjdk11:alpine-slim AS overlay
+FROM ubuntu:latest AS overlay
 
-RUN mkdir -p cas-overlay
-COPY ./src cas-overlay/src/
-COPY ./gradle/ cas-overlay/gradle/
-COPY ./gradlew ./settings.gradle ./build.gradle ./gradle.properties /cas-overlay/
+RUN apt-get update && apt-get install -y gradle
+
+WORKDIR /srv/sites/cas
+COPY ./src /srv/sites/cas/src/
+COPY ./gradle /srv/sites/cas/gradle/
+COPY ./gradlew /srv/sites/cas/gradlew/
+COPY ./gradlew ./settings.gradle ./build.gradle ./gradle.properties /srv/sites/cas/
 
 RUN mkdir -p ~/.gradle \
     && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties \
     && echo "org.gradle.configureondemand=true" >> ~/.gradle/gradle.properties \
-    && cd cas-overlay \
+    && cd /srv/sites/cas \
     && chmod 750 ./gradlew \
     && ./gradlew --version;
 
-RUN cd cas-overlay \
+RUN cd /srv/sites/cas \
     && ./gradlew clean build --info --parallel;
 
-FROM adoptopenjdk/openjdk11:alpine-jre AS cas
+
+FROM ubuntu:latest AS cas
+RUN apt-get update && apt-get install -y default-jre-headless
 
 LABEL "Organization"="Apereo"
 LABEL "Description"="Apereo CAS"
@@ -24,7 +29,7 @@ RUN cd / \
     && mkdir -p /etc/cas/config \
     && mkdir -p /etc/cas/services \
     && mkdir -p /etc/cas/saml \
-    && mkdir -p cas-overlay;
+    && mkdir -p /srv/sites/cas;
 
 # We're building an image for Kubernetes, so don't store any config locally
 #COPY etc/cas/ /etc/cas/
@@ -32,11 +37,11 @@ RUN cd / \
 #COPY etc/cas/services/ /etc/cas/services/
 #COPY etc/cas/saml/ /etc/cas/saml/
 
-COPY --from=overlay cas-overlay/build/libs/cas.war cas-overlay/
+COPY --from=overlay /srv/sites/cas/build/libs/cas.war /srv/sites/cas/
 
 #EXPOSE 8080 8443
 
 ENV PATH $PATH:$JAVA_HOME/bin:.
 
-WORKDIR cas-overlay
+WORKDIR /srv/sites/cas
 ENTRYPOINT ["java", "-server", "-noverify", "-Xmx2048M", "-jar", "cas.war"]
