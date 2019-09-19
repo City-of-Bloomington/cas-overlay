@@ -11,6 +11,7 @@ data:
   cas.properties: |-
     cas.server.name={{ .Values.config.casProperties.serverName }}
     cas.server.prefix={{ .Values.config.casProperties.serverPrefix }}
+    cas.server.tomcat.basicAuthn.enabled=false
     cas.serviceRegistry.json.location=file:/etc/cas/services
     cas.serviceRegistry.initFromJson=true
     cas.serviceRegistry.watcherEnabled=true
