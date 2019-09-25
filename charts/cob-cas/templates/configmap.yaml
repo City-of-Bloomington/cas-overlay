@@ -7,7 +7,7 @@ metadata:
     helm.sh/chart: {{ include "cob-cas.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-data: 
+data:
   cas.properties: |-
     cas.server.name={{ .Values.config.casProperties.serverName }}
     cas.server.prefix={{ .Values.config.casProperties.serverPrefix }}
@@ -28,7 +28,7 @@ data:
     cas.authn.ldap[0].bindDn={{ .Values.config.casProperties.ldap.bindDN }}
     cas.authn.ldap[0].bindCredential={{ .Values.config.casProperties.ldap.bindCredential }}
     cas.authn.ldap[0].dnFormat={{ .Values.config.casProperties.ldap.dnFormat }}
-    cas.authn.ldap[0].principalAttributeId={{ .Values.config.casProperties.ldap.PrincipalAttributeId }} 
+    cas.authn.ldap[0].principalAttributeId={{ .Values.config.casProperties.ldap.PrincipalAttributeId }}
     cas.authn.ldap[0].principalAttributeList={{ .Values.config.casProperties.ldap.PrincipalAttributeList }}
     cas.authn.oidc.issuer={{ .Values.config.casProperties.oidc.issuer }}
     cas.authn.oidc.claims={{ .Values.config.casProperties.oidc.claims }}
@@ -41,7 +41,7 @@ data:
     cas.tgc.crypto.signing.key={{ .Values.config.casProperties.crypto.tgcSigningKey }}
     cas.tgc.crypto.encryption.key={{ .Values.config.casProperties.crypto.tgcEncryptionKey }}
 
-    logging.level.org.apereo.cas=DEBUG
+    logging.level.org.apereo.cas=WARN
     server.tomcat.accesslog.enabled=true
     server.tomcat.accesslog.pattern=%t %a "%r" %s (%D ms)
     server.tomcat.accesslog.suffix=.log
