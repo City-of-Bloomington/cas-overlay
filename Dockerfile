@@ -1,6 +1,6 @@
 FROM ubuntu:latest AS overlay
 
-RUN apt-get update && apt-get install -y gradle
+RUN apt-get update && apt-get install -y gradle sassc
 
 WORKDIR /srv/sites/cas
 COPY ./src /srv/sites/cas/src/
@@ -16,6 +16,7 @@ RUN mkdir -p ~/.gradle \
     && ./gradlew --version;
 
 RUN cd /srv/sites/cas \
+    && sassc -mt compact src/main/resources/static/css/skin.scss src/main/resources/static/css/cas.css \
     && ./gradlew clean build --info --parallel;
 
 
