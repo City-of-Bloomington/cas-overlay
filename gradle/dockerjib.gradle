@@ -21,7 +21,7 @@ jib {
         */
     }
     container {
-        useCurrentTimestamp = true
+        creationTime = "USE_CURRENT_TIMESTAMP"
         entrypoint = ['docker/entrypoint.sh']
         ports = ['80', '443', '8080', '8443']
         labels = [version:casServerVersion, name:project.name, group:project.group]
@@ -32,6 +32,7 @@ jib {
             '/docker/entrypoint.sh': '755'
         ]
     }
+    allowInsecureRegistries = project.allowInsecureRegistries
 }
 
 task copyWebAppIntoJib(type: Copy, group: "Docker", description: "Copy the web application into Docker image") {
