@@ -16,7 +16,7 @@ ifndef DOCKER
 endif
 
 build: dependencies
-	docker build . -t ${DOCKER_REPO}/${IMAGE_NAME}:${VERSION}-${COMMIT}
+	docker build . -t ${DOCKER_REPO}/${IMAGE_NAME}:${VERSION}-${COMMIT} --build-arg VERSION=${COMMIT}
 
 push:
 	docker push ${DOCKER_REPO}/${IMAGE_NAME}:${VERSION}-${COMMIT}

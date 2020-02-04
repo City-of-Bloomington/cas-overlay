@@ -1,4 +1,5 @@
 FROM ubuntu:latest AS overlay
+ARG VERSION
 
 RUN apt-get update && apt-get install -y gradle sassc
 
@@ -16,15 +17,16 @@ RUN mkdir -p cas-overlay/.gradle \
     && ./gradlew --version;
 
 RUN cd /srv/cas-overlay \
-    && sassc -mt compact src/main/resources/static/css/cob.scss src/main/resources/static/css/cas.css \
+    && sassc -mt compact src/main/resources/static/css/cob.scss src/main/resources/static/css/cas-$VERSION.css \
+    && echo "cas.standard.css.file=/css/cas-$VERSION.css" > src/main/resources/cas-theme-default.properties \
     && ./gradlew clean build --info --parallel;
 
 
 FROM ubuntu:latest AS cas
 RUN apt-get update && apt-get install -y default-jre-headless
 
-LABEL "Organization"="Apereo"
-LABEL "Description"="Apereo CAS"
+LABEL "Organization"="City of Bloomington"
+LABEL "Description"="City of Bloomington CAS"
 
 RUN cd / \
     && mkdir -p /etc/cas/config \
