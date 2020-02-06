@@ -18,7 +18,7 @@ RUN mkdir -p cas-overlay/.gradle \
 
 RUN cd /srv/cas-overlay \
     && sassc -mt compact src/main/resources/static/css/cob.scss src/main/resources/static/css/cas-$VERSION.css \
-    && echo "cas.standard.css.file=/css/cas-$VERSION.css" > src/main/resources/cas-theme-default.properties \
+    && echo "cas.standard.css.file=/css/cas-$VERSION.css\ncas.javascript.file=/js/cas.js" > src/main/resources/cas-theme-default.properties \
     && ./gradlew clean build --info --parallel;
 
 
