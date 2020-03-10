@@ -1,3 +1,6 @@
+ARG VERSION
+ARG DEPLOY_NAME=cas
+
 FROM ubuntu:latest AS overlay
 ARG VERSION
 
@@ -23,6 +26,9 @@ RUN cd /srv/cas-overlay \
 
 
 FROM ubuntu:latest AS cas
+ARG DEPLOY_NAME
+ENV WAR=${DEPLOY_NAME}.war
+
 RUN apt-get update && apt-get install -y default-jre-headless
 
 LABEL "Organization"="City of Bloomington"
@@ -40,11 +46,12 @@ RUN cd / \
 #COPY etc/cas/services/ /etc/cas/services/
 #COPY etc/cas/saml/ /etc/cas/saml/
 
-COPY --from=overlay /srv/cas-overlay/build/libs/cas.war /srv/sites/cas/
+COPY --from=overlay /srv/cas-overlay/build/libs/cas.war /srv/sites/cas/$DEPLOY_NAME.war
 
 #EXPOSE 8080 8443
 
 ENV PATH $PATH:$JAVA_HOME/bin:.
 
 WORKDIR /srv/sites/cas
-ENTRYPOINT ["java", "-server", "-noverify", "-Xmx2048M", "-jar", "cas.war"]
+#ENTRYPOINT ["java", "-server", "-noverify", "-Xmx2048M", "-jar", "$BASE_URI.war"]
+ENTRYPOINT exec java -server -noverify -Xmx2048M -jar $WAR
