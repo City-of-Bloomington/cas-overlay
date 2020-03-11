@@ -47,6 +47,7 @@ RUN cd / \
 #COPY etc/cas/saml/ /etc/cas/saml/
 
 COPY --from=overlay /srv/cas-overlay/build/libs/cas.war /srv/sites/cas/$DEPLOY_NAME.war
+COPY ./entrypoint.sh /srv/sites/cas/entrypoint.sh
 
 #EXPOSE 8080 8443
 
@@ -54,4 +55,4 @@ ENV PATH $PATH:$JAVA_HOME/bin:.
 
 WORKDIR /srv/sites/cas
 #ENTRYPOINT ["java", "-server", "-noverify", "-Xmx2048M", "-jar", "$BASE_URI.war"]
-ENTRYPOINT exec java -server -noverify -Xmx2048M -jar $WAR
+ENTRYPOINT ["entrypoint.sh"]
