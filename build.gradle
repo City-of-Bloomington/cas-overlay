@@ -48,7 +48,7 @@ dependencies {
     compile "org.apereo.cas:cas-server-support-oidc:${project.'cas.version'}"
     compile "org.apereo.cas:cas-server-support-ldap:${project.'cas.version'}"
     compile "org.apereo.cas:cas-server-support-saml-idp:${project.'cas.version'}"
-    compile "org.apereo.cas:cas-server-support-saml-sp-integrations:${project.'cas.version'}"
+    //compile "org.apereo.cas:cas-server-support-saml-sp-integrations:${project.'cas.version'}"
 }
 
 tasks.findByName("jibDockerBuild")
