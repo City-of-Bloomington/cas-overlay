@@ -7,6 +7,7 @@ configurations {
 dependencies {
     bootRunConfig "org.apereo.cas:cas-server-webapp-init:${casServerVersion}"
     bootRunConfig "org.apereo.cas:cas-server-webapp-tomcat:${casServerVersion}"
+    bootRunConfig "org.springframework.boot:spring-boot-devtools:${project.springBootVersion}"
 }
 
 sourceSets {
@@ -19,10 +20,11 @@ sourceSets {
 }
 
 bootRun {
+    classpath = configurations.bootRunConfig + sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath
     doFirst {
         sourceResources sourceSets.bootRunSources
+        systemProperties = System.properties
     }
-    classpath = configurations.bootRunConfig + sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath
 
     def list = []
     list.add("-XX:TieredStopAtLevel=1")
@@ -57,6 +59,10 @@ bootRun {
 springBoot {
     buildInfo()
     mainClassName = "org.apereo.cas.web.CasWebApplication"
+}
+
+bootBuildImage {
+    imageName = "apereo/cas:${casServerVersion}"
 }
 
 bootWar {

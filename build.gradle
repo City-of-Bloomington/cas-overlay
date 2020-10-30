@@ -4,9 +4,18 @@ buildscript {
         gradlePluginPortal()
         mavenCentral()
         jcenter()
-        maven { url "https://repo.spring.io/libs-milestone" }
-        maven { url "https://repo.spring.io/libs-snapshot" }
-        maven { url "https://plugins.gradle.org/m2/" }
+        maven { 
+            url "https://repo.spring.io/libs-milestone" 
+            mavenContent { releasesOnly() }
+        }
+        maven { 
+            url "https://repo.spring.io/libs-snapshot" 
+            mavenContent { snapshotsOnly() }
+        }
+        maven { 
+            url "https://plugins.gradle.org/m2/" 
+            mavenContent { releasesOnly() }
+        }
     }
     dependencies {
         classpath "de.undercouch:gradle-download-task:${project.gradleDownloadTaskVersion}"
@@ -21,11 +30,26 @@ repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-    maven { url "https://build.shibboleth.net/nexus/content/repositories/releases/" }
-    maven { url "https://repo.spring.io/milestone/" }
-    maven { url "https://repo.spring.io/snapshot/" }
-    maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local" }
+    maven { 
+        url "https://oss.sonatype.org/content/repositories/snapshots" 
+        mavenContent { snapshotsOnly() }
+    }
+    maven { 
+        mavenContent { releasesOnly() }
+        url "https://build.shibboleth.net/nexus/content/repositories/releases/" 
+    }
+    maven { 
+        mavenContent { releasesOnly() }
+        url "https://repo.spring.io/milestone/" 
+    }
+    maven { 
+        url "https://repo.spring.io/snapshot/" 
+        mavenContent { snapshotsOnly() }
+    }
+    maven { 
+        mavenContent { snapshotsOnly() }
+        url "https://oss.jfrog.org/artifactory/oss-snapshot-local" 
+    }
 }
 
 def casServerVersion = project.'cas.version'
@@ -46,8 +70,18 @@ apply from: rootProject.file("gradle/springboot.gradle")
 apply from: rootProject.file("gradle/dockerjib.gradle")
 
 dependencies {
-    // Other CAS dependencies/modules may be listed here...
-    // implementation "org.apereo.cas:cas-server-support-json-service-registry:${casServerVersion}"
+    // Add modules in format compatible with overlay casModules property
+    if (project.hasProperty("casModules")) {
+        def dependencies = project.getProperty("casModules").split(",")
+        dependencies.each {
+            def projectsToAdd = rootProject.subprojects.findAll {project ->
+                project.name == "cas-server-core-${it}" || project.name == "cas-server-support-${it}"
+            }
+            projectsToAdd.each {implementation it}
+        }
+    }
+    // CAS dependencies/modules may be listed here statically...
+    implementation "org.apereo.cas:cas-server-webapp-init:${casServerVersion}"
 }
 
 tasks.findByName("jibDockerBuild")
