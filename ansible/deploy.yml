@@ -1,17 +1,14 @@
 ---
-- hosts: cas
-  become: yes
+- hosts:  'cas'
+  become: 'yes'
   roles:
-    - City-of-Bloomington.tomcat
+    - 'City-of-Bloomington.tomcat'
   tasks:
     - name: "Update apache configuration"
       template:
-        src: cas.conf
-        dest: /etc/apache2/sites-enabled/conf.d/cas.conf
-        owner: root
-        group: root
-        mode: 0644
-      notify: apache_restart
+        src:   'cas.conf'
+        dest:  '/etc/apache2/sites-enabled/conf.d/cas.conf'
+      notify:  'apache_restart'
 
     - name: "Create configuration directory"
       file:
@@ -22,23 +19,17 @@
       file:
         path: "/etc/cas/services"
         state: "directory"
-        owner: "tomcat8"
+        owner: "{{ tomcat_user }}"
 
     - name: "Create ssl directory"
       file:
         path: "/etc/cas/ssl"
         state: "directory"
-        owner: "tomcat8"
+        owner: "{{ tomcat_user }}"
 
     - name: "Configure CAS"
       template:
         src: "cas.properties"
-        dest: "/etc/cas/config"
-      notify: "tomcat_restart"
-
-    - name: "Configure Admin Users"
-      template:
-        src: "adminusers.properties"
         dest: "/etc/cas/config"
       notify: "tomcat_restart"
 
@@ -47,7 +38,7 @@
         content: "{{ cas_google_ssl.private }}"
         dest: "/etc/cas/ssl/private.pem"
         mode: "0640"
-        owner: "tomcat8"
+        owner: "{{ tomcat_user }}"
       when: cas_google_ssl.private is defined
       register: "private_pem"
       #no_log: True
@@ -72,29 +63,24 @@
         content: "{{ cas_google_ssl.cert }}"
         dest: "/etc/cas/ssl/x509.pem"
         mode: "0640"
-        owner: "tomcat8"
+        owner: "{{ tomcat_user }}"
       when: cas_google_ssl.cert is defined
       #no_log: True
       notify: "tomcat_restart"
 
-    - name: "Check for existing services"
-      find:
-        paths: "/etc/cas/services"
-        patterns: "*.json"
-      register: "existing_services"
-
     - name: "Configure services"
-      template:
-        src: "service.json"
-        dest: "/etc/cas/services/{{ item.name | regex_replace('[\\s]', '') }}-{{ item.id }}.json"
-        owner: "tomcat8"
-      with_items: "{{ cas_services }}"
-      when: existing_services.matched == "0"
+      copy:
+        src:   "{{ item }}"
+        dest:  '/etc/cas/services/'
+        owner: "{{ tomcat_user }}"
+      with_fileglob:
+        - "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/cas/services/*.json"
+        - "{{ inventory_dir }}/group_vars/cas/services/*.json"
       notify: "tomcat_restart"
 
     - name: "Install Webapp"
       copy:
-        src: "../target/cas.war"
+        src:  '../build/libs/cas.war'
         dest: "{{ cas_install_path }}.war"
       notify: "tomcat_restart"
 ...

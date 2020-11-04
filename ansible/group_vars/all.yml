@@ -1,26 +1,31 @@
 ---
 cas_webapp_name: "cas"
-cas_install_path: "/srv/webapps/{{ cas_webapp_name }}"
-
+cas_install_path: "{{ tomcat_webapps }}/{{ cas_webapp_name }}"
+cas_server_name:  "{{ ansible_host }}"
 cas_base_uri: "/{{ cas_webapp_name }}"
 cas_base_url: "https://{{ ansible_host }}{{ cas_base_uri }}"
 
 cas_ldap:
-  url: "ldaps://ldap.example.com"
-  baseDn: "OU=Departments,DC=com"
-  filter: "sAMAccountName=%u"
-  bindDn: "admin@ldap.example.com"
+  url:          "ldaps://ldap.example.com"
+  baseDn:       "OU=Departments,DC=com"
+  searchFilter: 'sAMAccountName={user}'
+  bindDn:       "admin@ldap.example.com"
   bindPassword: "{{ vault_cas_ldap.password }}"
-  dnFormat: "%u@example.com"
+  dnFormat:     "%u@example.com"
+  PrincipalAttributeId:   'sAMAccountName'
+  PrincipalAttributeList: 'sAMAccountName,mail,givenName,sn,uid'
 
-cas_adminPagesSecurity:
-  ip: "127\\.0\\.0\\.1"
-  users: []
+cas_oidc:
+  issuer: 'https://example.com/cas/oidc'
+  claims: 'email'
+
+cas_crypto:
+  webflowSigningKey:    ''
+  webflowEncryptionKey: ''
+  tgcSigningKey:        ''
+  tgcEncryptionKey:     ''
 
 cas_google_ssl:
-  private: "{{ vault_cas_google_ssl.private }}"
-  cert:    "{{ vault_cas_google_ssl.cert    }}"
-
-cas_services:
-  - { id: 1, name: "HTTPS and IMAPS", serviceId: "^(https|imaps)://.*", description: "This service definition authorizes all application urls that support HTTPS and IMAPS protocols." }
+  private: ''
+  cert:    ''
 ...
