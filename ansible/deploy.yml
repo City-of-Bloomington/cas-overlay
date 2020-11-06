@@ -10,22 +10,23 @@
         dest:  '/etc/apache2/sites-enabled/conf.d/cas.conf'
       notify:  'apache_restart'
 
-    - name: "Create configuration directory"
-      file:
-        path: "/etc/cas/config"
-        state: "directory"
+    - name: 'Add drop-in unit file'
+      copy:
+        src: 'tomcat.service'
+        dest: "/etc/systemd/system/{{ tomcat_package }}.service.d/cas.conf"
+      notify: 'linux_systemd_reload'
 
-    - name: "Create services directory"
+    - name: "Create directories"
       file:
-        path: "/etc/cas/services"
-        state: "directory"
-        owner: "{{ tomcat_user }}"
-
-    - name: "Create ssl directory"
-      file:
-        path: "/etc/cas/ssl"
-        state: "directory"
-        owner: "{{ tomcat_user }}"
+        path:    "{{ item }}"
+        state:   "directory"
+        owner:   "{{ tomcat_user }}"
+        recurse: 'yes'
+      with_items:
+        - '/etc/cas/config'
+        - '/etc/cas/saml'
+        - '/etc/cas/services'
+        - '/etc/cas/ssl'
 
     - name: "Configure CAS"
       template:
