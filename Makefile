@@ -8,9 +8,13 @@ COMMIT := $(shell git rev-parse --short HEAD)
 
 default: war
 
-war:
-	./gradlew build
+compile:
+	sassc -m -t compact src/main/resources/static/css/cob.scss src/main/resources/static/css/cas-${VERSION}.css
+	echo "cas.standard.css.file=/css/cas-${VERSION}.css" > src/main/resources/cas-theme-default.properties
 
-dockerfile:
+war: compile
+	./gradlew clean build
+
+dockerfile: compile
 	docker build . -t ${DOCKER_REPO}/${IMAGE_NAME}:${VERSION}-${COMMIT} --build-arg VERSION=${COMMIT}
 	docker push ${DOCKER_REPO}/${IMAGE_NAME}:${VERSION}-${COMMIT}

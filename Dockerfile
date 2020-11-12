@@ -1,7 +1,7 @@
 FROM ubuntu:latest AS overlay
 ARG VERSION
 
-RUN apt-get update && apt-get install -y gradle sassc
+RUN apt-get update && apt-get install -y gradle
 
 WORKDIR /srv
 RUN mkdir -p cas-overlay
@@ -17,8 +17,6 @@ RUN mkdir -p cas-overlay/.gradle \
     && ./gradlew --version;
 
 RUN cd /srv/cas-overlay \
-    && sassc -mt compact src/main/resources/static/css/cob.scss src/main/resources/static/css/cas-$VERSION.css \
-    && echo "cas.standard.css.file=/css/cas-$VERSION.css\ncas.javascript.file=/js/cas.js" > src/main/resources/cas-theme-default.properties \
     && ./gradlew clean build --parallel --no-daemon;
 
 FROM ubuntu:latest AS cas

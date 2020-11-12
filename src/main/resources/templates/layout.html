@@ -1,61 +1,37 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">CAS &#8211; Central Authentication Service</title>
+    <title layout:title-pattern="$LAYOUT_TITLE"
+           th:text="${#strings.defaultString(#themes.code('cas.theme.name'), 'CAS - Central Authentication Service')}" />
+    </title>
 
+    <!--/* Core CAS CSS */-->
+    <link rel="stylesheet" type="text/css" href="../static/css/normalize.css" th:href="@{#{webjars.normalize.css}}" />
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-grid.min.css" th:href="@{#{webjars.bootstrap-grid.css}}" />
+    <link rel="stylesheet" type="text/css" href="../static/css/material-components-web.min.css" th:href="@{#{webjars.material-components.css}}" />
+    <link rel="stylesheet" type="text/css" href="../static/css/mdi-font.css" th:href="@{#{webjars.mdi-font.css}}" />
+    <link rel="stylesheet" type="text/css" href="../static/css/cas.css" th:href="@{${#themes.code('cas.standard.css.file')}}"/>
 
-    <link rel="stylesheet" th:href="@{#{webjars.fontawesomemin.css}}"/>
-    <link type="text/css" rel="stylesheet" th:href="@{#{webjars.bootstrapmin.css}}"/>
-    <link type="text/css" rel="stylesheet" th:href="@{#{webjars.latomin.css}}"/>
-
-    <link rel="stylesheet" th:href="@{${#themes.code('standard.custom.css.file')}}"/>
-
-    <link rel="stylesheet" href="/cas/css/cob-20180125.css" />
-
-    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
-
-    <script type="text/javascript" th:src="@{#{webjars.zxcvbn.js}}"></script>
-    <script type="text/javascript" th:src="@{#{webjars.jquerymin.js}}"></script>
-    <script type="text/javascript" th:src="@{#{webjars.jqueryui.js}}"></script>
-    <script type="text/javascript" th:src="@{#{webjars.jquerycookie.js}}"></script>
-    <script src="//www.google.com/recaptcha/api.js" async defer th:if="${recaptchaSiteKey}"></script>
-    <script th:src="@{#{webjars.bootstrapmin.js}}"></script>
-
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-
-        var trackGeoLocation = /*[[${trackGeoLocation}]]*/ === "true";
-
-        var googleAnalyticsTrackingId = /*[[${googleAnalyticsTrackingId}]]*/;
-
-        if (googleAnalyticsTrackingId != null && googleAnalyticsTrackingId != '') {
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-            ga('create', googleAnalyticsTrackingId, 'auto');
-            ga('send', 'pageview');
-        }
-
-        /*]]>*/
-    </script>
+    <link rel="shortcut icon"
+          th:href="@{${#strings.defaultString(#themes.code('cas.favicon.file'), '/favicon.ico')}}" />
 </head>
 
 <body>
-<div id="container" class="container">
-    <div th:replace="fragments/logo"/>
-    <div layout:fragment="content" id="content">
-        <h1/>
-        <p/>
-    </div>
-    <div th:replace="fragments/footer"/>
-</div>
-<div th:insert="fragments/bottom"/>
+<script th:replace="fragments/scripts" />
 
+<div class="mdc-drawer-scrim"></div>
+
+<div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust d-flex justify-content-center">
+    <main role="main" id="main-content" class="container-lg py-4">
+        <div layout:fragment="content" id="content">
+            CAS content will go here
+        </div>
+    </main>
+</div>
 </body>
 </html>
