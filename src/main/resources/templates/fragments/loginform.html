@@ -13,12 +13,16 @@
 <body>
     <main role="main" class="container mt-3 mb-3">
         <!-- Login form template begins here -->
-        <div th:fragment="loginform" class="d-flex flex-column justify-content-between m-auto">
+        <div th:fragment="loginform" class="test d-flex flex-column justify-content-between m-auto">
+
+            <div class="card-header"></div>
+
             <div th:if="${delegatedAuthenticationProviderPrimary == null}">
                 <div class="service-ui" th:replace="fragments/serviceui :: serviceUI">
                     <a href="fragments/serviceui.html">service ui fragment</a>
                 </div>
             </div>
+
             <div class="form-wrapper">
                 <form method="post" id="fm1" th:object="${credential}" action="login">
 
@@ -27,17 +31,18 @@
                         <span class="mdc-button__label"
                               th:utext="#{screen.welcome.forcedsso(${existingSingleSignOnSessionPrincipal.id},${registeredService.name})}" />
                     </div>
-                    <h3 th:unless="${existingSingleSignOnSessionAvailable}" class="text-center">
+
+                    <!-- <h3 th:unless="${existingSingleSignOnSessionAvailable}" class="text-center">
                         <i class="mdi mdi-security"></i>
                         <span th:utext="#{screen.welcome.instructions}">Enter your Username and Password:</span>
-                    </h3>
+                    </h3> -->
 
                     <div class="banner banner-danger banner-dismissible" th:if="${#fields.hasErrors('*')}">
                         <p th:each="err : ${#fields.errors('*')}" th:utext="${err + ' '}">Example error</p>
                         <!--<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>-->
                     </div>
                     
-                    <section class="cas-field my-2=3">
+                    <section class="cas-field" th:if="${availableAuthenticationHandlerNames != null}">
                         <span th:if="${availableAuthenticationHandlerNames != null}">
                             <span th:if="${availableAuthenticationHandlerNames.size() > 1}">
                                 <label for="source" th:utext="#{screen.welcome.label.source}">Source</label>
@@ -61,46 +66,45 @@
                     </section>
 
 
-                    <section class="cas-field my-3">
+                    <section class="cas-field">
+                        <label
+                            for="username"
+                            th:utext="#{screen.welcome.label.netid}">Username</label>
+                        
+                        <input class="mdc-text-field__input"
+                            id="username"
+                            size="25"
+                            type="text"
+                            th:readonly="!${@casThymeleafLoginFormDirector.isLoginFormUsernameInputVisible(#vars)}"
+                            th:disabled="${@casThymeleafLoginFormDirector.isLoginFormUsernameInputDisabled(#vars)}"
+                            th:field="*{username}"
+                            th:accesskey="#{screen.welcome.label.netid.accesskey}"
+                            th:value="${@casThymeleafLoginFormDirector.getLoginFormUsername(#vars)}"
+                            autocomplete="off" />
 
-                        <div class="d-flex">
-
-                            <label for="username" class="mdc-text-field mdc-text-field--outlined">
-                                <input class="mdc-text-field__input"
-                                    id="username"
-                                    size="25"
-                                    type="text"
-                                    th:readonly="!${@casThymeleafLoginFormDirector.isLoginFormUsernameInputVisible(#vars)}"
-                                    th:disabled="${@casThymeleafLoginFormDirector.isLoginFormUsernameInputDisabled(#vars)}"
-                                    th:field="*{username}"
-                                    th:accesskey="#{screen.welcome.label.netid.accesskey}"
-                                    th:value="${@casThymeleafLoginFormDirector.getLoginFormUsername(#vars)}"
-                                    autocomplete="off" />
-
-                                <span class="mdc-notched-outline">
-                                <span class="mdc-notched-outline__leading"></span>
-                                <span class="mdc-notched-outline__notch">
-                                  <span class="mdc-floating-label" th:utext="#{screen.welcome.label.netid}">Username</span>
-                                </span>
-                                <span class="mdc-notched-outline__trailing"></span>
-                              </span>
-                            </label>
-                        </div>
+                            <!-- <span class="mdc-notched-outline">
+                            <span class="mdc-notched-outline__leading"></span>
+                            <span class="mdc-notched-outline__notch">
+                                <span class="mdc-floating-label" th:utext="#{screen.welcome.label.netid}">Username</span>
+                            </span>
+                            <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label> -->
                     </section>
 
-                    <section class="cas-field my-3 mdc-input-group">
+                    <section class="cas-field mdc-input-group">
                         <div class="mdc-input-group-field mdc-input-group-field-append">
-                            <div class="d-flex caps-check">
+                            <div class="caps-check">
 
                                 <label for="password"
-                                       class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
+                                       th:utext="#{screen.welcome.label.password}">Username</label>
 
                                     <input class="mdc-text-field__input pwd"
                                            type="password" id="password" size="25"
                                            th:accesskey="#{screen.welcome.label.password.accesskey}"
                                            th:field="*{password}" autocomplete="off" />
                                     
-                                    <span class="mdc-notched-outline">
+                                    <!-- <span class="mdc-notched-outline">
                                         <span class="mdc-notched-outline__leading"></span>
                                         <span class="mdc-notched-outline__notch">
                                           <span class="mdc-floating-label" th:utext="#{screen.welcome.label.password}">Username</span>
@@ -108,23 +112,23 @@
                                         <span class="mdc-notched-outline__trailing"></span>
                                     </span>
                                     
-                                </label>
+                                </label> -->
                             </div>
                             
-                            <div class="mdc-text-field-helper-line caps-warn">
+                            <!-- <div class="mdc-text-field-helper-line caps-warn">
                                 <p
                                     class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg text-danger">
                                     <span th:utext="#{screen.capslock.on}" />
                                 </p>
-                            </div>
+                            </div> -->
                         </div>
-                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append mdc-icon-button" type="button">
+                        <!-- <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append mdc-icon-button" type="button">
                             <i class="mdi mdi-eye reveal-password-icon"></i>
                             <span class="sr-only">Toggle Password</span>
-                        </button>
+                        </button> -->
                     </section>
 
-                    <section class="cas-field my-3">
+                    <section class="cas-field">
                         <div th:each="entry: ${customLoginFormFields}">
                             <div>
                                 <span th:text="#{${entry.value.messageBundleKey}}">Label</span>
@@ -176,7 +180,7 @@
                     </p>
                 </form>
 
-                <hr class="my-4" />
+                <!-- <hr class="my-4" /> -->
 
                 <div th:replace="fragments/pmlinks :: pmlinks" />
 
