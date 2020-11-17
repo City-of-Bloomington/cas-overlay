@@ -86,7 +86,6 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-oidc:${casServerVersion}"
     implementation "org.apereo.cas:cas-server-support-ldap:${casServerVersion}"
     implementation "org.apereo.cas:cas-server-support-saml-idp:${casServerVersion}"
-    implementation "org.apereo.cas:cas-server-support-saml-googleapps:${casServerVersion}"
 }
 
 tasks.findByName("jibDockerBuild")
