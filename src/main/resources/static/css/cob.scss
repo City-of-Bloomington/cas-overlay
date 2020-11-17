@@ -124,6 +124,17 @@ form {
             &.active {
                 border-color: $color-grey-dark !important;
             }
+
+            &:focus,
+            &:active,
+            &.active {
+                // outline: 5px auto -webkit-focus-ring-color;
+                outline: 5px auto $color-blue;
+                -webkit-outline: 5px auto $color-blue;
+                -moz-outline: 5px auto $color-blue;
+                -ms-outline: 5px auto $color-blue;
+                -o-outline: 5px auto $color-blue;
+            }
         }
     }
 
@@ -142,20 +153,25 @@ form {
         transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
         transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            background-color: $color-green-dark !important;
+            text-decoration: underline;
+        }
+
+        &:focus,
+        &:active,
+        &.active {
+            outline: 5px auto $color-blue;
+            -webkit-outline: 5px auto $color-blue;
+            -moz-outline: 5px auto $color-blue;
+            -ms-outline: 5px auto $color-blue;
+            -o-outline: 5px auto $color-blue;
+        }
     }
-}
-
-
-
-form input[type="submit"]:hover,
-button[type="submit"]:hover,
-form input[type="submit"]:focus,
-button[type="submit"]:focus,
-form input[type="submit"]:active,
-button[type="submit"]:active,
-form input[type="submit"].active,
-button[type="submit"].active {
-    background-color: $color-green-dark !important;
 }
 
 .banner {
@@ -187,4 +203,32 @@ button[type="submit"].active {
     margin: 0 0 4px 0 !important;
     padding: 0;
     text-align: center;
+}
+
+a {
+    &.forgot-pwd {
+        color: $color-blue;
+        text-decoration: none;
+        text-align: center;
+        display: block;
+        margin: 0 auto 20px auto;
+        width: max-content;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+            color: #212529;
+        }
+
+        &:focus,
+        &:active,
+        &.active {
+            // outline: 5px auto -webkit-focus-ring-color;
+            outline: 5px auto $color-blue;
+            -webkit-outline: 5px auto $color-blue;
+            -moz-outline: 5px auto $color-blue;
+            -ms-outline: 5px auto $color-blue;
+            -o-outline: 5px auto $color-blue;
+        }
+    }
 }
