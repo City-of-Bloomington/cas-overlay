@@ -40,8 +40,18 @@
         dest:  '/etc/cas/services/'
         owner: "{{ tomcat_user }}"
       with_fileglob:
-        - "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/cas/services/*.*"
-        - "{{ inventory_dir }}/group_vars/cas/services/*.*"
+        - "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/cas/services/*.json"
+        - "{{ inventory_dir }}/group_vars/cas/services/*.json"
+      notify: "tomcat_restart"
+
+    - name: "Configure SAML metadata"
+      copy:
+        src:   "{{ item }}"
+        dest:  '/etc/cas/saml/'
+        owner: "{{ tomcat_user }}"
+      with_fileglob:
+        - "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/cas/saml/*.xml"
+        - "{{ inventory_dir }}/group_vars/cas/saml/*.xml"
       notify: "tomcat_restart"
 
     - name: "Install Webapp"
