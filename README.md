@@ -1,148 +1,44 @@
-CAS Overlay Template [![Build Status](https://travis-ci.org/apereo/cas-overlay-template.svg?branch=master)](https://travis-ci.org/apereo/cas-overlay-template)
+CAS Deployment Overlay for COB
 =======================
 
-Generic CAS WAR overlay to exercise the latest versions of CAS. This overlay could be freely used as a starting template for local CAS war overlays.
+This is the cas overlay customizations for the City of Bloomington.  Our custom theme must be compiled into the WAR file that is built.  The Makefile is written to build a WAR file for either Docker deployment or deployment into a Tomcat server.
 
-# Versions
+Deployment can be done with either Ansible (deploy the WAR to Tomcat) or Helm (deploy the Docker image to Kubernetes).
 
-- CAS `6.3.x`
-- JDK `11`
+To use this overlay, you build CAS using make, then deploy the build however you like.
 
-# Overview
+## Using Makefile
+### Dependencies
+To build a deployment you must have these dependencies installed locally:
 
-To build the project, use:
+* make
+* scss
+* docker
+* gradle
+
+### Configure docker repo
+You must provide your choice of Docker repository via a variable declared in a make.conf file
+```bash
+DOCKER_REPO=https://docker.example.org/somewhere
+```
+
+### Build WAR
+This will build a WAR file that can be used to deploy into Tomcat or a Docker image.  The WAR file will be in /build/libs/cas.war
 
 ```bash
-# Use --refresh-dependencies to force-update SNAPSHOT versions
-./gradlew[.bat] clean build
+make war
 ```
 
-To see what commands are available to the build script, run:
+### Build Docker image
+This will build a tagged docker image, using the built WAR file, and push it to the docker repo.
 
 ```bash
-./gradlew[.bat] tasks
+make dockerfile
 ```
 
-To launch into the CAS command-line shell:
+## Deploying with Ansible
+Deploys the WAR file to a Tomcat server.
 
-```bash
-./gradlew[.bat] downloadShell runShell
-```
 
-To fetch and overlay a CAS resource or view, use:
-
-```bash
-./gradlew[.bat] getResource -PresourceName=[resource-name]
-```
-
-To list all available CAS views and templates:
-
-```bash
-./gradlew[.bat] listTemplateViews
-```
-
-To unzip and explode the CAS web application file and the internal resources jar:
-
-```bash
-./gradlew[.bat] explodeWar
-```
-
-# Configuration
-
-- The `etc` directory contains the configuration files and directories that need to be copied to `/etc/cas/config`.
-
-```bash
-./gradlew[.bat] copyCasConfiguration
-```
-
-- The specifics of the build are controlled using the `gradle.properties` file.
-
-## Adding Modules
-
-CAS modules may be specified under the `dependencies` block of the [Gradle build script](build.gradle):
-
-```gradle
-dependencies {
-    implmentation "org.apereo.cas:cas-server-some-module:${project.casVersion}"
-    ...
-}
-```
-
-To collect the list of all project modules and dependencies:
-
-```bash
-./gradlew[.bat] allDependencies
-```
-
-You could also add modules and dependencies dynamically on the fly using the `casModules` project property. For example, to include support for OpenID Connect and Duo Security, you could invoke the build using `-PcasModules=oidc,duo` and have it auto-include modules that provide requested functionality. Needless, to say, you will need to know the module name beforehand.
-
-### Clear Gradle Cache
-
-If you need to, on Linux/Unix systems, you can delete all the existing artifacts (artifacts and metadata) Gradle has downloaded using:
-
-```bash
-# Only do this when absolutely necessary
-rm -rf $HOME/.gradle/caches/
-```
-
-Same strategy applies to Windows too, provided you switch `$HOME` to its equivalent in the above command.
-
-# Deployment
-
-- Create a keystore file `thekeystore` under `/etc/cas`. Use the password `changeit` for both the keystore and the key/certificate entries. This can either be done using the JDK's `keytool` utility or via the following command:
-
-```bash
-./gradlew[.bat] createKeystore
-```
-
-- Ensure the keystore is loaded up with keys and certificates of the server.
-
-On a successful deployment via the following methods, CAS will be available at:
-
-* `https://cas.server.name:8443/cas`
-
-## Executable WAR
-
-Run the CAS web application as an executable WAR:
-
-```bash
-./gradlew[.bat] run
-```
-
-Debug the CAS web application as an executable WAR:
-
-```bash
-./gradlew[.bat] debug
-```
-
-Run the CAS web application as a *standalone* executable WAR:
-
-```bash
-./gradlew[.bat] clean executable
-```
-
-## External
-
-Deploy the binary web application file `cas.war` after a successful build to a servlet container of choice.
-
-## Docker
-
-The following strategies outline how to build and deploy CAS Docker images.
-
-### Jib
-
-The overlay embraces the [Jib Gradle Plugin](https://github.com/GoogleContainerTools/jib) to provide easy-to-use out-of-the-box tooling for building CAS docker images. Jib is an open-source Java containerizer from Google that lets Java developers build containers using the tools they know. It is a container image builder that handles all the steps of packaging your application into a container image. It does not require you to write a Dockerfile or have Docker installed, and it is directly integrated into the overlay.
-
-```bash
-./gradlew build jibDockerBuild
-```
-
-### Dockerfile
-
-You can also use the native Docker tooling and the provided `Dockerfile` to build and run CAS.
-
-```bash
-chmod +x *.sh
-./docker-build.sh
-./docker-run.sh
-```
+## Deploying with Helm
+Deploys the Docker image into Kubernetes.

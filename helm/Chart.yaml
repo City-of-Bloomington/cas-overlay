@@ -1,0 +1,16 @@
+---
+apiVersion:  'v2'
+version:     '0.2.0'
+type:        'application'
+description: 'CAS deployment for City of Bloomington'
+name:        'cas'
+home:        'https://github.com/City-of-Bloomington/cas-overlay'
+icon:        'https://bloomington.in.gov/static/citylogo-64.png'
+appVersion:  '6.x'
+maintainers:
+  - name:  'Seth Tierney'
+    email: 'tierneys@bloomington.in.gov'
+
+  - name:  'Cliff Ingham'
+    email: 'inghamn@bloomington.in.gov'
+...

@@ -1,0 +1,11 @@
+---
+apiVersion: 'v1'
+kind:       'Secret'
+metadata:
+  name: 'cas-ssl'
+data:
+  {{- $root := . -}}
+  {{- range $path, $bytes := .Files.Glob "files/ssl/*" }}
+  {{ base $path }}: '{{ $root.Files.Get $path | b64enc }}'
+  {{- end }}
+...

@@ -1,7 +1,7 @@
 include make.conf
 # Variables from make.conf:
 #
-# DOCKER_REPO
+# DOCKER_REPO=https://docker.example.org/somewhere
 IMAGE_NAME=cas
 VERSION := $(shell cat gradle.properties | grep "cas.version" | cut -d= -f2)
 COMMIT := $(shell git rev-parse --short HEAD)
