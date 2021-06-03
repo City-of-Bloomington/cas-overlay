@@ -17,20 +17,24 @@ To build a deployment you must have these dependencies installed locally:
 * gradle
 
 ### Configure docker repo
-You must provide your choice of Docker repository via a variable declared in a make.conf file
+You must provide your choice of Docker repository via a variable declared in a make.conf file.
 ```bash
 DOCKER_REPO=https://docker.example.org/somewhere
 ```
+You must also be logged into the Docker repository you declare.
+```bash
+docker login https://docker.example.org
+```
 
 ### Build WAR
-This will build a WAR file that can be used to deploy into Tomcat or a Docker image.  The WAR file will be in /build/libs/cas.war
+This will build a WAR file that can be used to deploy into Tomcat or a Docker image.  The WAR file will be in /build/libs/cas.war.
 
 ```bash
 make war
 ```
 
 ### Build Docker image
-This will build a tagged docker image, using the built WAR file, and push it to the docker repo.
+This will build a tagged docker image, using the built WAR file, and push it to the docker repo.  You must already be logged into the DOCKER_REPO for this to work.
 
 ```bash
 make dockerfile
