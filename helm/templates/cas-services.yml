@@ -1,8 +1,0 @@
----
-apiVersion: 'v1'
-kind:       'ConfigMap'
-metadata:
-  name: 'cas-services'
-data:
-  {{- (.Files.Glob "files/services/*").AsConfig | nindent 2 }}
-...

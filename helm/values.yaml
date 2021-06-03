@@ -9,41 +9,6 @@ image:
 nameOverride:     ''
 fullnameOverride: ''
 
-config:
-  casProperties:
-    base_uri:     '/cas'
-    serverName:   ''
-    serverPrefix: ''
-    hostName:     ''
-
-    ldap:
-      type: 'AUTHENTICATED'
-      url: ''
-      ConnectStrategy: 'ACTIVE_PASSIVE'
-      SSL: true
-      StartTLS: false
-      baseDN: ''
-      searchFilter: 'sAMAccountName={user}'
-      bindDN: ''
-      bindCredential: ''
-      dnFormat: ''
-      PrincipalAttributeId:   'sAMAccountName'
-      PrincipalAttributeList: 'sAMAccountName,mail,givenName,sn,uid'
-    oidc:
-      issuer: ''
-      claims: 'email'
-
-    crypto:
-      webflowSigningKey:    ''
-      webflowEncryptionKey: ''
-      tgcSigningKey:        ''
-      tgcEncryptionKey:     ''
-
-    ssl:
-      keyStoreLocation: '/etc/cas/ssl/keystore.p12'
-      keyStorePassword: ''
-
-
 service:
   type: 'ClusterIP'
 

@@ -26,17 +26,13 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
-        - name:   'cas-config'
-          configMap:
-            name: 'cas-config'
+        - name: 'pv-cas-data'
+          persistentVolumeClaim:
+            claimName: 'cas-data'
 
-        - name:         'cas-ssl'
-          secret:
-            secretName: 'cas-ssl'
-
-        - name:   'cas-services'
-          configMap:
-            name: 'cas-services'
+        - name: 'pv-cob-certificates'
+          persistentVolumeClaim:
+            claimName: 'cob-certificates'
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -45,28 +41,16 @@ spec:
             - name:         'http'
               containerPort: 8080
               protocol:     'TCP'
-          #livenessProbe:
-            #initialDelaySeconds: 60
-            #httpGet:
-              #path: "{{ .Values.config.casProperties.base_uri }}/logout"
-              #port: 8080
-          #readinessProbe:
-            #initialDelaySeconds: 60
-            #httpGet:
-              #path: "{{ .Values.config.casProperties.base_uri }}/logout"
-              #port: 8080
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 
           volumeMounts:
-            - name:      'cas-config'
-              mountPath: "/etc/cas/config"
+            - name:      'pv-cas-data'
+              mountPath: "/etc/cas"
 
-            - name:      'cas-services'
-              mountPath: "/etc/cas/services"
-
-            - name:      'cas-ssl'
-              mountPath: "/etc/cas/ssl"
+            - name:      'pv-cob-certificates'
+              mountPath: "/certs"
+          
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
